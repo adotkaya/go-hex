@@ -25,8 +25,8 @@ func main() {
 	defer dbAdapter.CloseDbConnection()
 
 	var arithAdapter ports.ArithmeticPort = arithmetic.NewAdapter()
-	var api ports.APIPort = api.NewAdapter(arithAdapter, dbAdapter)
+	var apiAdapter ports.APIPort = api.NewAdapter(arithAdapter, dbAdapter)
 
-	grpcAdapter := grpc.NewAdapter(api)
+	grpcAdapter := grpc.NewAdapter(apiAdapter)
 	grpcAdapter.Run()
 }
