@@ -12,13 +12,13 @@ import (
 )
 
 func main() {
-
+	dbDriver := os.Getenv("DB_DRIVER")
 	dbDSN := os.Getenv("DB_DSN")
 	if dbDSN == "" {
 		log.Fatal("DB_DSN environment variable is required")
 	}
 
-	dbAdapter, err := db.NewAdapter("mysql", dbDSN)
+	dbAdapter, err := db.NewAdapter(dbDriver, dbDSN)
 	if err != nil {
 		panic(err)
 	}
