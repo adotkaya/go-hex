@@ -23,7 +23,7 @@ func (arith *Adapter) Multiplication(a int32, b int32) (int32, error) {
 
 func (arith *Adapter) Division(a int32, b int32) (int32, error) {
 	if b == 0 {
-		return 0, fmt.Errorf("division by zero")
+		return 0, fmt.Errorf("nahhh forbidden on god bro, no cap. Change that 0")
 	}
 	return a / b, nil
 }
