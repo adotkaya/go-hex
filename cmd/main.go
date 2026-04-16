@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"go-hex/internal/adapters/app"
+	api "go-hex/internal/adapters/app"
 	"go-hex/internal/adapters/core/arithmetic"
 	"go-hex/internal/adapters/framework/left/grpc"
 	"go-hex/internal/adapters/framework/right/db"
@@ -12,7 +12,6 @@ import (
 )
 
 func main() {
-	var core ports.ArithmeticPort = arithmetic.NewAdapter()
 
 	dbDSN := os.Getenv("DB_DSN")
 	if dbDSN == "" {
@@ -23,8 +22,10 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	defer dbAdapter.CloseDbConnection()
 
-	var api ports.APIPort = api.NewAdapter(core, dbAdapter)
+	var arithAdapter ports.ArithmeticPort = arithmetic.NewAdapter()
+	var api ports.APIPort = api.NewAdapter(arithAdapter, dbAdapter)
 
 	grpcAdapter := grpc.NewAdapter(api)
 	grpcAdapter.Run()
