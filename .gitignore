@@ -1,0 +1,46 @@
+# Binaries
+bin/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binaries
+*.test
+
+# Output
+*.out
+*.prof
+
+# Go workspace
+go.work
+
+# Environment / secrets
+.env
+.env.*
+*.pem
+*.key
+*.crt
+*.p12
+credentials.json
+secrets.json
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Protoc binary (local tool)
+protoc
+
+# Database
+*.db
+*.sqlite
