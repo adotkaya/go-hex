@@ -1,29 +1,30 @@
 package arithmetic
 
-import "fmt"
-
-type Adapter struct {
+// Arith impliments the Arithmetic interface
+type Arith struct {
 }
 
-func NewAdapter() *Adapter {
-	return &Adapter{}
+// NewArith creates a new Arith
+func New() *Arith {
+	return &Arith{}
 }
 
-func (arith *Adapter) Addition(a int32, b int32) (int32, error) {
+// Addition gets the result of adding parameters a and b
+func (arith Arith) Addition(a int32, b int32) (int32, error) {
 	return a + b, nil
 }
 
-func (arith *Adapter) Substraction(a int32, b int32) (int32, error) {
+// Substraction gets the result of subtracting parameters a and b
+func (arith Arith) Substraction(a int32, b int32) (int32, error) {
 	return a - b, nil
 }
 
-func (arith *Adapter) Multiplication(a int32, b int32) (int32, error) {
+// Multiplication gets the result of multiplying parameters a and b
+func (arith Arith) Multiplication(a int32, b int32) (int32, error) {
 	return a * b, nil
 }
 
-func (arith *Adapter) Division(a int32, b int32) (int32, error) {
-	if b == 0 {
-		return 0, fmt.Errorf("nahhh forbidden on god bro, no cap. Change that 0")
-	}
+// Division gets the result of dividing parameters a and b
+func (arith Arith) Division(a int32, b int32) (int32, error) {
 	return a / b, nil
 }

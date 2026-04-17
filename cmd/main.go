@@ -4,29 +4,46 @@ import (
 	"log"
 	"os"
 
+	// application
 	api "go-hex/internal/adapters/app"
 	"go-hex/internal/adapters/core/arithmetic"
-	"go-hex/internal/adapters/framework/left/grpc"
+
+	// adapters
+	gRPC "go-hex/internal/adapters/framework/left/grpc"
 	"go-hex/internal/adapters/framework/right/db"
-	"go-hex/internal/ports"
 )
 
 func main() {
-	dbDriver := os.Getenv("DB_DRIVER")
-	dbDSN := os.Getenv("DB_DSN")
-	if dbDSN == "" {
-		log.Fatal("DB_DSN environment variable is required")
-	}
+	var err error
 
-	dbAdapter, err := db.NewAdapter(dbDriver, dbDSN)
+	dbaseDriver := os.Getenv("DB_DRIVER")
+	dsourceName := os.Getenv("DS_NAME")
+
+	dbAdapter, err := db.NewAdapter(dbaseDriver, dsourceName)
 	if err != nil {
-		panic(err)
+		log.Fatalf("failed to initiate dbase connection: %v", err)
 	}
 	defer dbAdapter.CloseDbConnection()
 
-	var arithAdapter ports.ArithmeticPort = arithmetic.NewAdapter()
-	var apiAdapter ports.APIPort = api.NewAdapter(arithAdapter, dbAdapter)
+	// core
+	core := arithmetic.New()
 
-	grpcAdapter := grpc.NewAdapter(apiAdapter)
-	grpcAdapter.Run()
+	// NOTE: The application's right side port for driven
+	// adapters, in this case, a db adapter.
+	// Therefore the type for the dbAdapter parameter
+	// that is to be injected into the NewApplication will
+	// be of type DbPort
+	applicationAPI := api.NewApplication(dbAdapter, core)
+
+	// NOTE: We use dependency injection to give the grpc
+	// adapter access to the application, therefore
+	// the location of the port is inverted. That is
+	// the grpc adapter accesses the hexagon's driving port at the
+	// application boundary via dependency injection,
+	// therefore the type for the applicaitonAPI parameter
+	// that is to be injected into the gRPC adapter will
+	// be of type APIPort which is our hexagons left side
+	// port for driving adapters
+	gRPCAdapter := gRPC.NewAdapter(applicationAPI)
+	gRPCAdapter.Run()
 }
